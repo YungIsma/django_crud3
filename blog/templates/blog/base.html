@@ -20,6 +20,7 @@
                 <li><a href="{% url 'profile' %}"></a>Профиль</li>
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'post_new '%}">Добавить</a> </li>
+                <li><a href="{% url 'post_draft' %}"> class='top-menu'</a> </li>
                 {% endif %}
             </ul>
         </nav>

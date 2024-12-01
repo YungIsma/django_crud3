@@ -1,0 +1,8 @@
+{% if post_published%}
+    <div class="date"> </div>
+        {{% post.published_date %}}
+    </div>
+{% else %}
+    <p align="center"><a class="bttn btn-default" href="{% url'post_publish' pk=post.pk %}">Publish</a></p>
+{% endif %}
+{% endblock %}
