@@ -68,9 +68,12 @@ def post_new(request):
                 form.add_error('title', 'Пост с таким заголовком уже существует')
             else:
                 post = form.save(commit=False)
-                post.published_date = timezone.now()
+                if 'save_as_draft'not in request.POST:
+                    post.publiched_date = timezone.now()
+                else:
+                    post.published_date = None
                 post.save()
-                return redirect('post_detail', pkk=post.pk)
+                return redirect('post_detail', pk=post.pk)
     else:
         form = NewPostForm()
     return render(request, 'blog/post_new.html', {'form': form})
@@ -104,5 +107,14 @@ def post_info(request, pk):
 
 def post_published(request, pk):
     post = get_object_or_404(NewPost, pk=pk)
+    if post.author != request.user:
+        return HttpResponseForbidden('Вы не можете опубликовать эту запись')
     post.publish()
     return redirect('post_info', pk=pk)
+
+def post_del(request, pk):
+    post = get_object_or_404(NewPost, pk=pk)
+    if post.author != request.user:
+        return HttpResponseForbidden('Вы не можете удалять эту запись')
+    post.delete()
+    return redirect('post_draft')
